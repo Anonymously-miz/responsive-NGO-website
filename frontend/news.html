@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News &amp; Updates | Community Builders Network - Sierra Leone</title>
+  <meta name="description" content="Latest blog posts, upcoming events and success stories from Community Builders Network - Sierra Leone." />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  <!-- Shared header — edit partials/header.html to change it on every page -->
+  <div data-include="header"></div>
+
+  <!-- ============================================================
+       PAGE HERO
+       ============================================================ -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb">Home / News &amp; Updates</div>
+      <h1>News, Stories &amp; Events</h1>
+      <p>The latest from the field — read our blog, discover upcoming events across Sierra Leone and meet the people whose lives our work has changed.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BLOG
+       ============================================================ -->
+  <section id="blog">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">From the Blog</span>
+        <h2>Latest Insights &amp; Field Notes</h2>
+        <p>News, opinion and updates from our teams working across Sierra Leone.</p>
+      </div>
+
+      <!-- Featured post — filled from /api/blog with the most recently published post -->
+      <div id="blog-loading" class="featured-post" aria-busy="true"
+           style="min-height:360px;background:var(--cbn-gray-100);box-shadow:none;"></div>
+      <article class="featured-post" id="featured-post" style="display:none;"></article>
+
+      <!-- Filter tabs (blog categories) -->
+      <div class="filter-tabs" role="tablist" aria-label="Blog filter" data-target="blog-grid">
+        <button class="is-active" data-filter="all">All Posts</button>
+        <button data-filter="field">Field Notes</button>
+        <button data-filter="policy">Policy</button>
+        <button data-filter="voices">Voices</button>
+        <button data-filter="research">Research</button>
+      </div>
+
+      <!-- Remaining posts — filled from /api/blog -->
+      <div class="blog-grid" id="blog-grid"></div>
+
+      <div style="text-align:center; margin-top: 40px;">
+        <button type="button" class="btn btn-ghost" id="loadMorePosts" style="display:none;">
+          Load More Posts
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       SUCCESS STORIES
+       ============================================================ -->
+  <section id="stories">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Real People, Real Impact</span>
+        <h2>Success Stories</h2>
+        <p>Meet the Sierra Leoneans whose lives have been transformed through our programmes.</p>
+      </div>
+
+      <div class="stories-grid">
+
+        <article class="success-card">
+          <div class="s-img" style="background-image:url('https://images.pexels.com/photos/29852895/pexels-photo-29852895.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=700');">
+            <div class="s-name">
+              <strong>Mariama, 19</strong>
+              <span>Girls' Education Scholar</span>
+            </div>
+          </div>
+          <div class="s-body">
+            <blockquote>“CBN's scholarship kept me in school. Now I am the first in my family to study nursing at university.”</blockquote>
+            <a href="/projects/girls-education-initiative" class="more">Read Mariama's story →</a>
+          </div>
+        </article>
+
+        <article class="success-card">
+          <div class="s-img" style="background-image:url('https://images.pexels.com/photos/3894379/pexels-photo-3894379.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=700');">
+            <div class="s-name">
+              <strong>Isata, 34</strong>
+              <span>Cooperative Leader · Makeni</span>
+            </div>
+          </div>
+          <div class="s-body">
+            <blockquote>“Our women's cooperative supplies vegetables to three markets. Every mother in the group can now pay school fees.”</blockquote>
+            <a href="/projects/womens-farming-cooperatives" class="more">Read Isata's story →</a>
+          </div>
+        </article>
+
+        <article class="success-card">
+          <div class="s-img" style="background-image:url('https://images.pexels.com/photos/9301866/pexels-photo-9301866.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=700');">
+            <div class="s-name">
+              <strong>Mohamed, 22</strong>
+              <span>Vocational Skills Graduate</span>
+            </div>
+          </div>
+          <div class="s-body">
+            <blockquote>“I trained as a tailor with CBN. Today I run my own shop in Bo and employ three friends from my class.”</blockquote>
+            <a href="/projects/youth-vocational-skills-programme" class="more">Read Mohamed's story →</a>
+          </div>
+        </article>
+
+        <article class="success-card">
+          <div class="s-img" style="background-image:url('https://images.pexels.com/photos/1181695/pexels-photo-1181695.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=700');">
+            <div class="s-name">
+              <strong>Fatmata, 41</strong>
+              <span>Community Health Worker</span>
+            </div>
+          </div>
+          <div class="s-body">
+            <blockquote>“In two years we have delivered 300 healthy babies in our chiefdom — with zero maternal deaths.”</blockquote>
+            <a href="/projects/maternal-child-health-outreach" class="more">Read Fatmata's story →</a>
+          </div>
+        </article>
+
+        <article class="success-card">
+          <div class="s-img" style="background-image:url('https://images.pexels.com/photos/26855714/pexels-photo-26855714.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=700');">
+            <div class="s-name">
+              <strong>Abdul, 16</strong>
+              <span>Peace Club Youth Leader</span>
+            </div>
+          </div>
+          <div class="s-body">
+            <blockquote>“Our peace club taught us how to talk before we fight. It changed the way my school works.”</blockquote>
+            <a href="/projects/youth-vocational-skills-programme" class="more">Read Abdul's story →</a>
+          </div>
+        </article>
+
+        <article class="success-card">
+          <div class="s-img" style="background-image:url('https://images.pexels.com/photos/34735590/pexels-photo-34735590.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=700');">
+            <div class="s-name">
+              <strong>Aminata, 28</strong>
+              <span>Village Water Committee Chair</span>
+            </div>
+          </div>
+          <div class="s-body">
+            <blockquote>“Since our borehole was installed, no child in my village has missed school to fetch water.”</blockquote>
+            <a href="/projects/safe-water-kono-district" class="more">Read Aminata's story →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       NEWSLETTER SIGNUP
+       ============================================================ -->
+  <section class="newsletter" id="newsletter">
+    <div class="container">
+      <h3>Get CBN News in Your Inbox</h3>
+      <p>Monthly stories, project updates and event invites — straight from Sierra Leone. No spam, unsubscribe anytime.</p>
+      <form class="newsletter-form" id="newsletterForm"
+            method="POST" action="/api/newsletter" novalidate>
+        <input type="text" name="website" tabindex="-1" autocomplete="off"
+               style="position:absolute;left:-9999px;" aria-hidden="true">
+        <input type="email" name="email" placeholder="you@example.com"
+               required aria-label="Email address"/>
+        <button type="submit">Subscribe</button>
+      </form>
+      <div class="form-msg" id="newsMsg" style="max-width:520px; margin: 16px auto 0; text-align:left;">
+        ✓ Thanks for subscribing! Look out for our next newsletter.
+      </div>
+    </div>
+  </section>
+
+  <!-- Shared footer — edit partials/footer.html to change it on every page -->
+  <div data-include="footer"></div>
+
+  <script src="/script.js"></script>
+  <script>
+  /* ================================================================
+     news.html — Blog section driven by the database
+     ================================================================
+     GET /api/blog returns published posts, newest publication first.
+       posts[0]      → the featured story
+       posts[1..n]   → the card grid (6 at a time, "Load More" for the rest)
+     Every link points at the server-rendered article: /blog/<slug>
+     ================================================================ */
+  (function () {
+    'use strict';
+
+    var CAT_LABELS   = { field: 'Field Notes', policy: 'Policy', voices: 'Voices', research: 'Research' };
+    var FALLBACK_IMG = 'https://images.pexels.com/photos/20407106/pexels-photo-20407106.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=800';
+    var PAGE_SIZE    = 6;
+
+    var loading  = document.getElementById('blog-loading');
+    var featured = document.getElementById('featured-post');
+    var grid     = document.getElementById('blog-grid');
+    var moreBtn  = document.getElementById('loadMorePosts');
+    var tabBar   = document.querySelector('.filter-tabs[data-target="blog-grid"]');
+
+    function esc(s) {
+      var d = document.createElement('div');
+      d.appendChild(document.createTextNode(s == null ? '' : String(s)));
+      return d.innerHTML;
+    }
+    function catLabel(c) {
+      return CAT_LABELS[c] || (c ? c.charAt(0).toUpperCase() + c.slice(1) : 'Update');
+    }
+    // SQLite gives "YYYY-MM-DD HH:MM:SS" — parse the date part ourselves so
+    // every browser (incl. Safari) formats it identically.
+    function fmtDate(s, short) {
+      if (!s) return '';
+      var p = String(s).slice(0, 10).split('-');
+      if (p.length < 3) return s;
+      var d = new Date(+p[0], +p[1] - 1, +p[2]);
+      return d.toLocaleDateString('en-GB', { day: '2-digit', month: short ? 'short' : 'long', year: 'numeric' });
+    }
+    function img(p) { return p.image_url || FALLBACK_IMG; }
+    function url(p) { return p.url || ('/blog/' + p.slug); }
+
+    /* ── Featured story (most recently published post) ── */
+    function renderFeatured(p) {
+      featured.innerHTML =
+        '<a class="fp-img" href="' + esc(url(p)) + '" aria-label="' + esc(p.title) + '"' +
+        '   style="background-image:url(\'' + esc(img(p)) + '\');display:block;"></a>' +
+        '<div class="fp-body">' +
+          '<span class="fp-tag">Featured Story</span>' +
+          '<div class="post-meta">' +
+            '<span>📅 ' + esc(fmtDate(p.published_at)) + '</span>' +
+            '<span>✍ By ' + esc(p.author || 'CBN Team') + '</span>' +
+            '<span>⏱ ' + esc(p.read_time || 1) + ' min read</span>' +
+          '</div>' +
+          '<h3><a href="' + esc(url(p)) + '" style="color:inherit;text-decoration:none;">' + esc(p.title) + '</a></h3>' +
+          '<p>' + esc(p.excerpt || '') + '</p>' +
+          '<div><a href="' + esc(url(p)) + '" class="btn btn-primary">Read the Article</a></div>' +
+        '</div>';
+      featured.style.display = '';
+    }
+
+    /* ── One card in the grid ── */
+    function buildCard(p) {
+      return (
+        '<article class="blog-card" data-category="' + esc(p.category || '') + '">' +
+          '<div class="thumb">' +
+            '<span class="cat">' + esc(catLabel(p.category)) + '</span>' +
+            '<a href="' + esc(url(p)) + '"><img src="' + esc(img(p)) + '" alt="' + esc(p.title) + '" loading="lazy"/></a>' +
+          '</div>' +
+          '<div class="body">' +
+            '<div class="post-meta">' +
+              '<span>📅 ' + esc(fmtDate(p.published_at, true)) + '</span>' +
+              '<span>⏱ ' + esc(p.read_time || 1) + ' min read</span>' +
+            '</div>' +
+            '<h3><a href="' + esc(url(p)) + '" style="color:inherit;text-decoration:none;">' + esc(p.title) + '</a></h3>' +
+            '<p>' + esc(p.excerpt || '') + '</p>' +
+            '<a href="' + esc(url(p)) + '" class="more">Read more →</a>' +
+          '</div>' +
+        '</article>'
+      );
+    }
+
+    /* ── Paging ── */
+    var remaining = [];
+    function showMore() {
+      var batch = remaining.splice(0, PAGE_SIZE);
+      grid.insertAdjacentHTML('beforeend', batch.map(buildCard).join(''));
+      moreBtn.style.display = remaining.length ? '' : 'none';
+      // Respect whichever category tab is currently selected
+      if (tabBar && typeof tabBar.applyActiveFilter === 'function') tabBar.applyActiveFilter();
+    }
+    moreBtn.addEventListener('click', showMore);
+
+    /* ── Fetch from the database API ── */
+    fetch('/api/blog', { cache: 'no-store', credentials: 'same-origin' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('API responded ' + res.status);
+        return res.json();
+      })
+      .then(function (posts) {
+        loading.style.display = 'none';
+        if (!posts || !posts.length) {
+          grid.innerHTML = '<p style="color:var(--cbn-gray-500);padding:30px;grid-column:1/-1;text-align:center;">' +
+                           'No blog posts have been published yet. Check back soon.</p>';
+          return;
+        }
+        renderFeatured(posts[0]);
+        remaining = posts.slice(1);
+        if (remaining.length) {
+          showMore();
+        } else {
+          grid.innerHTML = '<p style="color:var(--cbn-gray-500);padding:20px;grid-column:1/-1;text-align:center;">' +
+                           'More stories coming soon.</p>';
+        }
+      })
+      .catch(function (err) {
+        console.error('Could not load blog posts:', err);
+        loading.innerHTML =
+          '<div style="padding:40px;text-align:center;color:#dc2626;grid-column:1/-1;">' +
+          'Could not load blog posts. Please make sure the server is running ' +
+          '(<code>python3 server.py</code>) and open the site via ' +
+          '<code>http://127.0.0.1:8000/news.html</code>.</div>';
+      });
+  })();
+  </script>
+</body>
+</html>

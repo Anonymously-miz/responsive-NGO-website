@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Community Builders Network - Sierra Leone</title>
+  <meta name="description" content="Get in touch with Community Builders Network - Sierra Leone. We'd love to hear from you." />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 50px;
+      align-items: flex-start;
+    }
+    .contact-info {
+      background: var(--cbn-navy);
+      color: #fff;
+      padding: 40px;
+      border-radius: var(--radius);
+    }
+    .contact-info h3 { color: #fff; margin-bottom: 20px; font-size: 1.3rem; }
+    .contact-info .info-item {
+      padding: 16px 0;
+      border-bottom: 1px solid #ffffff1a;
+    }
+    .contact-info .info-item:last-child { border-bottom: 0; }
+    .contact-info .info-label {
+      font-size: .75rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cbn-gold);
+      margin-bottom: 4px;
+      font-weight: 700;
+    }
+    .contact-info .info-value {
+      color: #fff;
+      font-size: .95rem;
+    }
+    .contact-info a { color: #fff; }
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-info { padding: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shared header — edit partials/header.html to change it on every page -->
+  <div data-include="header"></div>
+
+  <!-- ============================================================
+       PAGE HERO
+       ============================================================ -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb">Home / Contact</div>
+      <h1>Get in Touch</h1>
+      <p>Have a question, partnership idea or just want to say hello? Drop us a line — our team reads every message.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT FORM + INFO
+       ============================================================ -->
+  <section>
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- Contact form: METHOD=POST, ACTION=/api/contact -->
+        <form class="form-card" id="contactForm"
+              method="POST" action="/api/contact" novalidate
+              style="margin:0; max-width:none;">
+          <h3 style="color:var(--cbn-navy); margin-bottom:20px;">Send us a message</h3>
+
+          <!-- Honeypot: bots fill this in, humans can't see it -->
+          <input type="text" name="website" tabindex="-1" autocomplete="off"
+                 style="position:absolute;left:-9999px;" aria-hidden="true">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="c-name">Name *</label>
+              <input type="text" id="c-name" name="name" required maxlength="100" />
+            </div>
+            <div class="form-group">
+              <label for="c-email">Email *</label>
+              <input type="email" id="c-email" name="email" required maxlength="254" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="c-subject">Subject</label>
+            <input type="text" id="c-subject" name="subject" maxlength="200" />
+          </div>
+          <div class="form-group">
+            <label for="c-msg">Message *</label>
+            <textarea id="c-msg" name="message" required maxlength="3000"
+                      placeholder="How can we help?"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;">
+            Send Message
+          </button>
+
+          <div class="form-msg" id="contactMsg">
+            ✓ Thank you! Your message has been received.
+          </div>
+        </form>
+
+        <!-- Static contact info -->
+        <aside class="contact-info">
+          <h3>Reach us directly</h3>
+          <div class="info-item">
+            <div class="info-label">Office</div>
+            <div class="info-value">112 Bai Bureh Road, Grassfield<br>Freetown, Sierra Leone</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div class="info-value"><a href="tel:+23278940635">+232 78 940 635</a></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-value"><a href="mailto:cbnetwork.sierraleone@gmail.com">cbnetwork.sierraleone@gmail.com</a></div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Office Hours</div>
+            <div class="info-value">Mon – Fri · 8:30 AM – 5:00 PM WAT</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Follow us</div>
+            <div class="info-value socials" style="display:flex;gap:10px;margin-top:8px;">
+              <a href="https://www.facebook.com/share/19F64u5mBd/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+              <a href="https://www.instagram.com/cbnsl_1?igsi=MXZoaXhjaTJmaW10cg%3D%3D&utm_source=qr&wa_status_inline=true" target="_blank" rel="noopener" aria-label="Instagram">◎</a>
+
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Shared footer — edit partials/footer.html to change it on every page -->
+  <div data-include="footer"></div>
+
+  <script src="/script.js"></script>
+</body>
+</html>

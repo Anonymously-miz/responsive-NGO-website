@@ -1,0 +1,30 @@
+# Secrets — email.env holds the Gmail App Password; monime.env holds the Monime API token
+email.env
+email.env.tmp
+monime.env
+monime.env.tmp
+*.env
+!email.env.example
+!monime.env.example
+
+# Local database
+cbn.db
+cbn.db-wal
+cbn.db-shm
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+.github
+email.env.example
+*.sh
+*.md
+*.yml
+Dockerfile
+restructure.py

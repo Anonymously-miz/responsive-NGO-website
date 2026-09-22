@@ -1,0 +1,55 @@
+[Unit]
+Description=Community Builders Network Website
+After=network.target
+
+[Service]
+Type=simple
+User=cbn
+WorkingDirectory=/opt/cbn/backend
+
+# Environment Variables (set your actual values here)
+Environment="CBN_HOST=127.0.0.1"
+Environment="CBN_PORT=8000"
+Environment="CBN_LOG_FILE=/var/log/cbn/cbn.log"
+Environment="CBN_LOG_LEVEL=INFO"
+
+# Email (Gmail SMTP)
+Environment="CBN_EMAIL_ENABLED=1"
+Environment="CBN_SMTP_HOST=smtp.gmail.com"
+Environment="CBN_SMTP_PORT=587"
+Environment="CBN_SMTP_USER=cbnetwork.sierraleone@gmail.com"
+Environment="CBN_SMTP_PASS=xxxx xxxx xxxx xxxx"
+Environment="CBN_SMTP_FROM_NAME=CBN Sierra Leone"
+Environment="CBN_OFFICE_ADDRESS=15 Wilkinson Road, Freetown, Sierra Leone"
+Environment="CBN_OFFICE_PHONE=+232 76 000 000"
+Environment="CBN_OFFICE_EMAIL=cbnetwork.sierraleone@gmail.com"
+
+# Monime Payment Gateway (optional)
+Environment="CBN_MONIME_ENABLED=1"
+Environment="CBN_MONIME_SPACE_ID=spc-xxxxx"
+Environment="CBN_MONIME_ACCESS_TOKEN=sk_xxxxx"
+Environment="CBN_MONIME_WEBHOOK_SECRET=xxxxx"
+Environment="CBN_MONIME_MODE=live"
+Environment="CBN_PUBLIC_BASE_URL=https://cbn-sl.org"
+
+# Frontend directory
+Environment="CBN_FRONTEND_DIR=/opt/cbn/frontend"
+
+# Start command
+ExecStart=python3 server.py
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=cbn
+
+# Resource limits (optional)
+# LimitNOFILE=65535
+# MemoryLimit=1G
+
+[Install]
+WantedBy=multi-user.target

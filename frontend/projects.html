@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects | Community Builders Network - Sierra Leone</title>
+  <meta name="description" content="Explore current and past projects of Community Builders Network - Sierra Leone across education, health, WASH, livelihoods and youth development." />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  <!-- Shared header — edit partials/header.html to change it on every page -->
+  <div data-include="header"></div>
+
+  <!-- ============================================================
+       PAGE HERO
+       ============================================================ -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb">Home / Projects</div>
+      <h1>Our Projects Across Sierra Leone</h1>
+      <p>From boreholes to classrooms — explore the community-led initiatives changing lives in all 16 districts of Sierra Leone.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CURRENT PROJECTS  — populated dynamically from the database
+       ============================================================ -->
+  <section id="current">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Currently Running</span>
+        <h2>Current Projects</h2>
+        <p>Active initiatives our teams are delivering right now in partnership with local communities and donors.</p>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs" role="tablist" aria-label="Project filter" data-target="current-grid">
+        <button class="is-active" data-filter="all">All</button>
+        <button data-filter="education">Education</button>
+        <button data-filter="health">Health &amp; WASH</button>
+        <button data-filter="livelihoods">Livelihoods</button>
+        <button data-filter="youth">Youth &amp; Gender</button>
+      </div>
+
+      <!-- Skeleton loader shown while fetching -->
+      <div id="current-loading" class="projects-grid dense" aria-busy="true">
+        <div class="project-card" style="height:340px;background:var(--cbn-gray-100);border-radius:var(--radius);"></div>
+        <div class="project-card" style="height:340px;background:var(--cbn-gray-100);border-radius:var(--radius);"></div>
+        <div class="project-card" style="height:340px;background:var(--cbn-gray-100);border-radius:var(--radius);"></div>
+      </div>
+
+      <!-- Populated by JS -->
+      <div class="projects-grid dense" id="current-grid" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAST PROJECTS  — populated dynamically from the database
+       ============================================================ -->
+  <section id="past" class="bg-soft">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Completed &amp; Delivered</span>
+        <h2>Past Projects</h2>
+        <p>A snapshot of successful initiatives we have completed with the support of our partners and communities.</p>
+      </div>
+
+      <!-- Skeleton loader -->
+      <div id="past-loading" class="projects-grid dense">
+        <div class="project-card" style="height:280px;background:var(--cbn-gray-100);border-radius:var(--radius);"></div>
+        <div class="project-card" style="height:280px;background:var(--cbn-gray-100);border-radius:var(--radius);"></div>
+      </div>
+
+      <!-- Populated by JS -->
+      <div class="projects-grid dense" id="past-grid" style="display:none;"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PROJECT IMPACT STORIES
+       ============================================================ -->
+  <section id="stories">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Voices from the Field</span>
+        <h2>Project Impact Stories</h2>
+        <p>The real people behind the numbers — meet the Sierra Leoneans whose lives our projects have changed.</p>
+      </div>
+
+      <!-- Featured story -->
+      <article class="story-feature">
+        <div class="sf-img" style="background-image:url('https://images.pexels.com/photos/15538205/pexels-photo-15538205.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=800&w=1000');"></div>
+        <div class="sf-body">
+          <span class="sf-cat">Girls' Education Initiative</span>
+          <h3>“I never thought I'd finish secondary school.”</h3>
+          <blockquote>
+            When my father died, my mother could not afford the school fees. CBN's
+            scholarship kept me in school and now I am studying nursing in Freetown —
+            the first in my family to go to college.
+          </blockquote>
+          <div class="sf-author">— <strong>Mariama, 19</strong> · CBN Scholar, Class of 2025</div>
+          <div><a href="/projects/girls-education-initiative" class="btn btn-ghost">Read Full Story</a></div>
+        </div>
+      </article>
+
+      <!-- Grid of shorter stories -->
+      <div class="projects-grid">
+
+        <article class="project-card">
+          <div class="thumb">
+            <span class="cat">Water &amp; Sanitation</span>
+            <img src="https://images.pexels.com/photos/19879046/pexels-photo-19879046.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=800" alt="Water story"/>
+          </div>
+          <div class="body">
+            <h3>Fresh Water Comes to people</h3>
+            <p>“For the first time, our children don't miss school to fetch water,” says parents after the borehole was installed.</p>
+            <a href="/projects/safe-water-kono-district" class="more">Read story →</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="thumb">
+            <span class="cat">Livelihoods</span>
+            <img src="https://images.pexels.com/photos/31537320/pexels-photo-31537320.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=800" alt="Women farmers"/>
+          </div>
+          <div class="body">
+            <h3>A Cooperative that Feeds 40 Families</h3>
+            <p>How Isata and 39 other women turned a micro-grant into a thriving vegetable farming business supplying local markets.</p>
+            <a href="/projects/womens-farming-cooperatives" class="more">Read story →</a>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="thumb">
+            <span class="cat">Youth</span>
+            <img src="https://images.pexels.com/photos/26855714/pexels-photo-26855714.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=500&w=800" alt="Youth training"/>
+          </div>
+          <div class="body">
+            <h3>From Street Trader to Business Owner</h3>
+            <p>18-year-old Mohamed completed CBN's vocational programme and now runs a tailoring shop employing three of his classmates.</p>
+            <a href="/projects/youth-vocational-skills-programme" class="more">Read story →</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA
+       ============================================================ -->
+  <section class="cta-band">
+    <div class="container">
+      <span style="color: var(--cbn-gold); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size:.85rem;">Fund a Project</span>
+      <h2>Every Project Starts with a Partner Like You.</h2>
+      <p>Sponsor a borehole, fund a scholarship or back a whole programme. Every leone raised goes directly to communities in Sierra Leone.</p>
+      <a href="/donate.html" class="btn btn-primary">Support Our Work</a>
+    </div>
+  </section>
+
+  <!-- Shared footer — edit partials/footer.html to change it on every page -->
+  <div data-include="footer"></div>
+
+  <script src="/script.js"></script>
+  <script>
+  /* ================================================================
+     projects.html — Dynamic project cards from the database
+     ================================================================
+     Fetches /api/projects, separates current vs past, builds
+     card HTML, and inserts "Read full article" links pointing at
+     /projects/<slug>  (the server-rendered article route).
+     ================================================================ */
+  (function () {
+
+    /* ── Category display names & colours ── */
+    var CAT_LABELS = {
+      health:      'Health & WASH',
+      education:   'Education',
+      livelihoods: 'Livelihoods',
+      youth:       'Youth & Gender'
+    };
+    var CAT_COLOURS = {
+      health:      '#0ea5e9',
+      education:   '#8b5cf6',
+      livelihoods: '#16a34a',
+      youth:       '#f59e0b'
+    };
+
+    /* ── Safely encode text to avoid XSS in JS-built HTML ── */
+    function esc(str) {
+      var d = document.createElement('div');
+      d.appendChild(document.createTextNode(String(str || '')));
+      return d.innerHTML;
+    }
+
+    /* ── Build one project card HTML string ── */
+    function buildCard(p) {
+      var isCurrent = p.status === 'current';
+      var catLabel  = CAT_LABELS[p.category] || (p.category || 'General');
+      var catColour = CAT_COLOURS[p.category] || '#f36f21';
+      var years     = (p.start_year && p.end_year)
+                      ? p.start_year + '\u2013' + p.end_year
+                      : (p.start_year || p.end_year || '');
+
+      /* Progress bar — only for current projects */
+      var progressHTML = '';
+      if (isCurrent && p.funded_percent != null) {
+        progressHTML =
+          '<div class="progress-label">' +
+            '<span>Funded</span><span>' + esc(p.funded_percent) + '%</span>' +
+          '</div>' +
+          '<div class="progress">' +
+            '<span data-target="' + esc(p.funded_percent) + '%" style="width:0%"></span>' +
+          '</div>';
+      }
+
+      /* The key link — points to the server-rendered article page */
+      var articleLink = p.slug
+        ? '<a href="/projects/' + esc(p.slug) + '" class="more read-article-link">' +
+          'Read full article \u2192</a>'
+        : '';
+
+      return (
+        '<article class="project-card" data-category="' + esc(p.category || '') + '">' +
+
+          '<div class="thumb">' +
+            '<span class="cat" style="background:' + catColour + '">' +
+              esc(catLabel) +
+            '</span>' +
+            '<span class="status' + (isCurrent ? '' : ' past') + '">' +
+              (isCurrent ? 'Active' : 'Completed') +
+            '</span>' +
+            '<img src="' + esc(p.image_url || '') + '" ' +
+                 'alt="' + esc(p.title) + '" loading="lazy"/>' +
+          '</div>' +
+
+          '<div class="body">' +
+            '<div class="project-meta">' +
+              (p.district ? '<span>\uD83D\uDCCD ' + esc(p.district) + '</span>' : '') +
+              (years      ? '<span>\uD83D\uDDD3 ' + esc(years)     + '</span>' : '') +
+            '</div>' +
+            '<h3>' + esc(p.title) + '</h3>' +
+            '<p>'  + esc(p.description || '') + '</p>' +
+            progressHTML +
+            articleLink +
+          '</div>' +
+
+        '</article>'
+      );
+    }
+
+    /* ── Populate a grid container ── */
+    function fillGrid(gridEl, projects) {
+      gridEl.innerHTML = projects.map(buildCard).join('');
+
+      /* Animate progress bars that just appeared */
+      gridEl.querySelectorAll('.progress > span[data-target]').forEach(function (bar) {
+        setTimeout(function () {
+          bar.style.width = bar.dataset.target;
+        }, 120);
+      });
+
+      /* Scroll-reveal for the freshly injected cards */
+      if ('IntersectionObserver' in window) {
+        gridEl.querySelectorAll('.project-card').forEach(function (card) {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(16px)';
+          card.style.transition = 'opacity .5s ease, transform .5s ease';
+        });
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) {
+              e.target.style.opacity = '1';
+              e.target.style.transform = 'none';
+              io.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        gridEl.querySelectorAll('.project-card').forEach(function (c) { io.observe(c); });
+      }
+    }
+
+    /* ── Fetch from the database API and render ── */
+    fetch('/api/projects')
+      .then(function (res) {
+        if (!res.ok) throw new Error('API error ' + res.status);
+        return res.json();
+      })
+      .then(function (projects) {
+
+        var current = projects.filter(function (p) { return p.status === 'current'; });
+        var past    = projects.filter(function (p) { return p.status === 'past'; });
+
+        /* ── Current Projects ── */
+        var currentGrid    = document.getElementById('current-grid');
+        var currentLoading = document.getElementById('current-loading');
+        if (currentGrid) {
+          if (current.length) {
+            fillGrid(currentGrid, current);
+          } else {
+            currentGrid.innerHTML =
+              '<p style="color:var(--cbn-gray-500);padding:30px;">No current projects found.</p>';
+          }
+          if (currentLoading) currentLoading.style.display = 'none';
+          currentGrid.style.display = '';
+        }
+
+        /* ── Past Projects ── */
+        var pastGrid    = document.getElementById('past-grid');
+        var pastLoading = document.getElementById('past-loading');
+        if (pastGrid) {
+          if (past.length) {
+            fillGrid(pastGrid, past);
+          } else {
+            pastGrid.innerHTML =
+              '<p style="color:var(--cbn-gray-500);padding:30px;">No past projects found.</p>';
+          }
+          if (pastLoading) pastLoading.style.display = 'none';
+          pastGrid.style.display = '';
+        }
+
+        /* Re-run the existing filter tab logic now that cards exist */
+        var activeFilter = document.querySelector('.filter-tabs button.is-active');
+        if (activeFilter) activeFilter.click();
+      })
+      .catch(function (err) {
+        console.error('Could not load projects:', err);
+        var loading = document.getElementById('current-loading');
+        if (loading) {
+          loading.innerHTML =
+            '<p style="color:#dc2626;padding:20px;">' +
+            'Could not load projects. Please make sure the server is running, ' +
+            'then refresh the page.</p>';
+        }
+      });
+
+  })();
+  </script>
+</body>
+</html>

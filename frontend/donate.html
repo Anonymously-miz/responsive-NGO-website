@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Donate | Community Builders Network - Sierra Leone</title>
+  <meta name="description" content="Support CBN Sierra Leone through a secure Orange Money donation. Every leone reaches communities directly." />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ─── Donate page specific ─── */
+    .donate-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 50px;
+      align-items: flex-start;
+    }
+
+    /* Amount preset buttons */
+    .amount-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .amount-btn {
+      padding: 14px 10px;
+      border: 2px solid var(--cbn-gray-200);
+      background: #fff;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--cbn-navy);
+      cursor: pointer;
+      transition: all .2s;
+      text-align: center;
+    }
+    .amount-btn:hover,
+    .amount-btn.selected {
+      border-color: var(--cbn-orange);
+      background: var(--cbn-orange);
+      color: #fff;
+    }
+
+    /* Payment method tabs */
+    .pay-tabs {
+      display: flex;
+      gap: 0;
+      border: 1.5px solid var(--cbn-gray-200);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 22px;
+    }
+    .pay-tab {
+      flex: 1;
+      padding: 13px 10px;
+      border: 0;
+      background: #fff;
+      font: inherit;
+      font-weight: 700;
+      font-size: .88rem;
+      color: var(--cbn-gray-700);
+      cursor: pointer;
+      transition: all .2s;
+      border-right: 1.5px solid var(--cbn-gray-200);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pay-tab:last-child { border-right: 0; }
+    .pay-tab.active {
+      background: var(--cbn-navy);
+      color: #fff;
+    }
+    .pay-tab img { height: 22px; width: auto; }
+    .pay-panel { display: none; }
+    .pay-panel.active { display: block; }
+
+    /* Orange Money branding */
+    .orange-money-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #ff6b00, #ff9500);
+      color: #fff;
+      padding: 18px 22px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      margin: -20px -20px 20px;
+    }
+    .orange-money-header .om-logo {
+      width: 52px; height: 52px;
+      background: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: #ff6b00;
+      flex-shrink: 0;
+    }
+    .orange-money-header h4 { color: #fff; font-size: 1.05rem; margin-bottom: 2px; }
+    .orange-money-header p  { opacity: .9; font-size: .85rem; }
+
+    /* USSD display box */
+    .ussd-display {
+      background: #1a1a2e;
+      color: #00ff88;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      padding: 20px;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      line-height: 1.9;
+    }
+    .ussd-highlight {
+      color: #ffcc00;
+      font-weight: 700;
+    }
+
+    /* ── Card payment: live card preview ── */
+    .card-preview {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      aspect-ratio: 1.586;
+      margin: 0 auto 20px;
+      padding: 22px 24px;
+      border-radius: 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #0a2a4a 0%, #1e73be 55%, #f36f21 130%);
+      box-shadow: 0 18px 40px rgba(10,42,74,.35);
+      overflow: hidden;
+      display: flex; flex-direction: column; justify-content: space-between;
+      font-family: "Courier New", monospace;
+      transition: transform .3s ease, box-shadow .3s ease, background .4s ease;
+    }
+    .card-preview:hover { transform: rotateX(4deg) rotateY(-4deg) translateY(-2px); }
+    .card-preview.visa       { background: linear-gradient(135deg, #1a1f71 0%, #2a5bd7 60%, #f7b600 140%); }
+    .card-preview.mastercard { background: linear-gradient(135deg, #1d1d1b 0%, #4a4a48 55%, #eb001b 130%); }
+    .card-preview.valid { box-shadow: 0 18px 40px rgba(22,163,74,.35), 0 0 0 3px rgba(22,163,74,.6); }
+    .cp-shine {
+      position: absolute; inset: -40% -60%;
+      background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.18) 50%, transparent 60%);
+      transform: translateX(-60%);
+      animation: cp-sweep 4.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes cp-sweep { 0%, 60% { transform: translateX(-60%); } 100% { transform: translateX(60%); } }
+    .cp-top { display: flex; align-items: center; gap: 12px; }
+    .cp-chip {
+      width: 42px; height: 30px; border-radius: 6px;
+      background: linear-gradient(135deg, #f6d365, #c89b3c);
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,.15);
+      position: relative;
+    }
+    .cp-chip::after {
+      content: ""; position: absolute; inset: 6px 4px;
+      border: 1px solid rgba(0,0,0,.25); border-radius: 3px;
+    }
+    .cp-contactless { font-size: 1rem; letter-spacing: -3px; opacity: .8; transform: rotate(90deg); display: inline-block; }
+    .cp-brand { margin-left: auto; font-weight: 900; font-family: Helvetica, Arial, sans-serif; letter-spacing: 1.5px; font-size: .8rem; opacity: .95; }
+    .cp-number { font-size: 1.35rem; letter-spacing: 2px; margin: 8px 0; text-shadow: 0 1px 2px rgba(0,0,0,.4); }
+    .cp-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+    .cp-label { font-size: .55rem; letter-spacing: 2px; text-transform: uppercase; opacity: .75; font-family: Helvetica, Arial, sans-serif; }
+    .cp-name  { font-size: .95rem; letter-spacing: 1.5px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 230px; }
+    .cp-amt   { font-size: .95rem; font-weight: 700; }
+    .cp-ref   { position: absolute; right: 14px; top: 50%; transform: translateY(-50%) rotate(90deg); transform-origin: right center;
+                font-size: .55rem; letter-spacing: 3px; opacity: .45; font-family: Helvetica, Arial, sans-serif; }
+
+    /* Card brand picker */
+    .brand-pick { display: flex; gap: 10px; flex-wrap: wrap; }
+    .brand-opt {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      border: 2px solid var(--cbn-gray-200); border-radius: var(--radius);
+      padding: 8px 12px; font-size: .85rem; font-weight: 700; color: var(--cbn-navy);
+      transition: border-color .2s, background .2s;
+    }
+    .brand-opt input { position: absolute; opacity: 0; pointer-events: none; }
+    .brand-opt:has(input:checked) { border-color: var(--cbn-orange); background: #fff7ed; }
+    .bo-logo { display: inline-flex; align-items: center; justify-content: center; height: 24px; min-width: 40px; border-radius: 4px; font-size: .7rem; font-weight: 900; letter-spacing: 1px; }
+    .bo-logo.visa  { background: #1a1f71; color: #fff; font-style: italic; padding: 0 6px; }
+    .bo-logo.mc    { gap: 0; }
+    .bo-logo.mc i  { width: 18px; height: 18px; border-radius: 50%; display: inline-block; }
+    .bo-logo.mc i:first-child { background: #eb001b; }
+    .bo-logo.mc i:last-child  { background: #f79e1b; margin-left: -7px; opacity: .92; }
+    .bo-logo.other { background: var(--cbn-gray-100); font-size: 1rem; }
+
+    /* Card trust strip */
+    .card-trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 4px 0 20px; }
+    .ct-item { display: flex; gap: 8px; align-items: flex-start; background: var(--cbn-gray-50); border: 1px solid var(--cbn-gray-200); border-radius: var(--radius); padding: 10px; }
+    .ct-item span { font-size: 1.1rem; line-height: 1; }
+    .ct-item strong { display: block; font-size: .78rem; color: var(--cbn-navy); }
+    .ct-item small  { display: block; font-size: .7rem; color: var(--cbn-gray-500); line-height: 1.35; }
+    @media (max-width: 560px) { .card-trust { grid-template-columns: 1fr; } .cp-number { font-size: 1.05rem; } }
+
+    /* Steps list */
+    .steps-list { list-style: none; margin: 0 0 20px; }
+    .steps-list li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--cbn-gray-100);
+    }
+    .steps-list li:last-child { border-bottom: 0; }
+    .step-num {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, #ff6b00, #ff9500);
+      color: #fff; font-weight: 800; font-size: .85rem;
+      display: grid; place-items: center; flex-shrink: 0;
+    }
+    .step-text strong { display: block; color: var(--cbn-navy); margin-bottom: 3px; }
+    .step-text span   { font-size: .88rem; color: var(--cbn-gray-500); }
+
+    /* Security badge row */
+    .security-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--cbn-gray-50);
+      border: 1px solid var(--cbn-gray-200);
+      border-radius: 40px;
+      padding: 6px 12px;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--cbn-gray-700);
+    }
+    .badge .ico { font-size: 1rem; }
+
+    /* Impact sidebar */
+    .impact-sidebar .i-card {
+      background: #fff;
+      border: 1px solid var(--cbn-gray-200);
+      border-radius: var(--radius);
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+    .impact-sidebar .i-head {
+      background: var(--cbn-navy);
+      color: #fff;
+      padding: 12px 18px;
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+    }
+    .impact-sidebar .i-body { padding: 18px; }
+    .impact-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--cbn-gray-100);
+    }
+    .impact-row:last-child { border-bottom: 0; }
+    .impact-row .amt {
+      min-width: 70px;
+      font-weight: 800;
+      color: var(--cbn-orange);
+      font-size: 1rem;
+    }
+    .impact-row .desc {
+      font-size: .88rem;
+      color: var(--cbn-gray-700);
+    }
+
+    /* Transaction status modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,42,74,.7);
+      display: none;
+      place-items: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: grid; }
+    .modal-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 40px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+      position: relative;
+    }
+    .modal-icon {
+      width: 80px; height: 80px; border-radius: 50%;
+      margin: 0 auto 20px;
+      display: grid; place-items: center;
+      font-size: 2rem;
+    }
+    .modal-icon.pending  { background: #fef3c7; }
+    .modal-icon.success  { background: #dcfce7; }
+    .modal-icon.failed   { background: #fee2e2; }
+    .modal-box h3 { color: var(--cbn-navy); margin-bottom: 10px; }
+    .modal-box p  { color: var(--cbn-gray-500); margin-bottom: 20px; font-size: .95rem; }
+    .modal-ref {
+      background: var(--cbn-gray-50);
+      border: 1px solid var(--cbn-gray-200);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-family: monospace;
+      font-size: .95rem;
+      color: var(--cbn-navy);
+      margin-bottom: 22px;
+      word-break: break-all;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid var(--cbn-gray-200);
+      border-top-color: var(--cbn-orange);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 900px) {
+      .donate-grid { grid-template-columns: 1fr; }
+      .amount-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .orange-money-header { flex-direction: column; text-align: center; }
+      .modal-box { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shared header — edit partials/header.html to change it on every page -->
+  <div data-include="header"></div>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumb">Home / Donate</div>
+      <h1>Fund Real Change in Sierra Leone</h1>
+      <p>100% of your donation reaches communities. Choose your amount and pay securely with Orange Money, Africell Money or your bank card.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MAIN DONATE SECTION
+       ============================================================ -->
+  <section>
+    <div class="container">
+      <div class="donate-grid">
+
+        <!-- ── LEFT: DONATION FORM ── -->
+        <div>
+
+          <!-- Donation form -->
+          <form class="form-card" id="donateForm" method="POST"
+                action="/api/donate" novalidate
+                style="max-width:none; position:relative;">
+
+            <!-- Honeypot -->
+            <input type="text" name="website" tabindex="-1" autocomplete="off"
+                   style="position:absolute;left:-9999px;" aria-hidden="true">
+
+            <h3 style="color:var(--cbn-navy);margin-bottom:20px;font-size:1.25rem;">
+              Your Donation
+            </h3>
+
+            <!-- Step 1 – Frequency -->
+            <div class="form-group">
+              <label>Giving Frequency</label>
+              <div class="pay-tabs" style="margin-bottom:0;">
+                <button type="button" class="pay-tab active" data-freq="once">
+                  One-time
+                </button>
+                <button type="button" class="pay-tab" data-freq="monthly">
+                  Monthly
+                </button>
+              </div>
+              <input type="hidden" name="frequency" id="freqInput" value="once">
+            </div>
+
+            <!-- Step 2 – Amount -->
+            <div class="form-group">
+              <label>Select or Enter Amount (Sierra Leonean Leones)</label>
+              <div class="amount-grid">
+                <button type="button" class="amount-btn" data-amount="50000">Le 50,000</button>
+                <button type="button" class="amount-btn" data-amount="100000">Le 100,000</button>
+                <button type="button" class="amount-btn selected" data-amount="250000">Le 250,000</button>
+                <button type="button" class="amount-btn" data-amount="500000">Le 500,000</button>
+                <button type="button" class="amount-btn" data-amount="1000000">Le 1,000,000</button>
+                <button type="button" class="amount-btn" data-amount="custom">Custom</button>
+              </div>
+              <input type="number" id="amountInput" name="amount" value="250000"
+                     min="5000" max="100000000"
+                     placeholder="Enter amount in Leones"
+                     style="margin-top:8px;">
+              <small style="color:var(--cbn-gray-500); margin-top:6px; display:block;"
+                     id="amountEquiv">≈ $12 USD · funds one week of a girl's scholarship</small>
+            </div>
+
+            <!-- Step 3 – Designation (optional) -->
+            <div class="form-group">
+              <label>Designate to a Project (optional)</label>
+              <select name="project_designation" id="projectDesig">
+                <option value="">Where it's needed most</option>
+                <option value="safe-water-kono-district">Safe Water</option>
+                <option value="girls-education-initiative">Girls' Education Initiative</option>
+                <option value="womens-farming-cooperatives">Women's Farming Cooperatives</option>
+                <option value="rebuilding-rural-primary-schools">Rebuilding Rural Primary Schools</option>
+                <option value="maternal-child-health-outreach">Maternal &amp; Child Health Outreach</option>
+                <option value="youth-vocational-skills-programme">Youth Vocational Skills Programme</option>
+              </select>
+            </div>
+
+            <!-- Step 4 – Donor details -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="d-first">First Name *</label>
+                <input type="text" id="d-first" name="first_name" required maxlength="50">
+              </div>
+              <div class="form-group">
+                <label for="d-last">Last Name *</label>
+                <input type="text" id="d-last" name="last_name" required maxlength="50">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="d-email">Email Address *</label>
+              <input type="email" id="d-email" name="email" required maxlength="254">
+              <small style="color:var(--cbn-gray-500);display:block;margin-top:4px;">Your receipt will be sent here.</small>
+            </div>
+            <!-- The payment-specific field (Orange number / Africell number / card holder)
+                 lives inside each payment panel below and is validated by that method's
+                 own function. Hidden inputs carry the chosen values to the server. -->
+            <input type="hidden" name="phone" id="phoneHidden">
+            <input type="hidden" name="card_holder" id="cardHolderHidden">
+
+            <!-- Step 5 – Payment Method -->
+            <div class="form-group">
+              <label>Payment Method</label>
+              <div class="pay-tabs">
+                <button type="button" class="pay-tab active" data-method="orange_money">
+                  🟠 Orange Money
+                </button>
+                <button type="button" class="pay-tab" data-method="africell_money">
+                  🟣 Africell Money
+                </button>
+                <button type="button" class="pay-tab" data-method="card">
+                  💳 Card
+                </button>
+              </div>
+              <input type="hidden" name="payment_method" id="methodInput" value="orange_money">
+              <small style="display:block;margin-top:8px;color:var(--cbn-gray-500);">
+                Payments are processed securely by <strong>Monime</strong>, Sierra Leone's payment platform.
+                You'll confirm on Monime's page — we never see your PIN or card details.
+              </small>
+            </div>
+
+            <!-- Orange Money panel -->
+            <div class="pay-panel active" id="panel-orange_money">
+              <div style="background:#fff7ed; border:1.5px solid #fed7aa;
+                          border-radius:var(--radius); padding:18px; margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                  <span style="font-size:1.8rem;">🟠</span>
+                  <div>
+                    <strong style="color:#c2410c;">Orange Money Sierra Leone</strong><br>
+                    <small style="color:#92400e;">Instant mobile payment — no bank account needed</small>
+                  </div>
+                </div>
+                <p style="font-size:.88rem;color:#78350f;margin:0;">
+                  After clicking <strong>Donate Now</strong> you'll be taken to Monime's secure page, where a
+                  payment request is sent to <span id="phonePreview" style="font-weight:700;">your Orange Money number</span>.
+                  Enter your 4-digit Orange Money PIN on your phone to confirm — it completes in seconds.
+                </p>
+              </div>
+
+              <!-- Orange Money: the number to charge -->
+              <div class="form-group">
+                <label for="om-phone">Orange Money Number *
+                  <small style="font-weight:400;color:var(--cbn-gray-500);letter-spacing:0;text-transform:none;">
+                    (Orange SL numbers start with 072–079)</small>
+                </label>
+                <div style="display:flex;gap:8px;">
+                  <span style="display:flex;align-items:center;padding:0 14px;border:1.5px solid var(--cbn-gray-200);
+                               border-radius:var(--radius);background:var(--cbn-gray-50);font-weight:700;color:var(--cbn-navy);
+                               white-space:nowrap;">🇸🇱 +232</span>
+                  <input type="tel" id="om-phone" inputmode="numeric" autocomplete="tel-national"
+                         placeholder="76 123 456" maxlength="12" style="flex:1;">
+                </div>
+                <small id="om-phone-msg" style="display:block;margin-top:6px;min-height:1.1em;color:var(--cbn-gray-500);">
+                  Enter the number registered to your Orange Money wallet.</small>
+              </div>
+              <ul class="steps-list">
+                <li>
+                  <span class="step-num">1</span>
+                  <div class="step-text">
+                    <strong>Click "Donate Now"</strong>
+                    <span>We open Monime's secure checkout with your amount and reference</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num">2</span>
+                  <div class="step-text">
+                    <strong>Confirm your number</strong>
+                    <span>Choose Orange Money and confirm the mobile number to charge</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num">3</span>
+                  <div class="step-text">
+                    <strong>Enter your PIN on your phone</strong>
+                    <span>A USSD prompt appears — type your 4-digit Orange Money PIN</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num">4</span>
+                  <div class="step-text">
+                    <strong>Done! Receipt by email</strong>
+                    <span>You're returned to this page and receive an email receipt from CBN</span>
+                  </div>
+                </li>
+              </ul>
+              <div class="ussd-display" id="ussdPreview">
+                <div>CBN Donation Request</div>
+                <div>─────────────────────</div>
+                <div>Amount: <span class="ussd-highlight" id="ussdAmt">Le 250,000</span></div>
+                <div>To: Community Builders Network</div>
+                <div>Ref: <span class="ussd-highlight" id="ussdRef">CBN-XXXXXX</span></div>
+                <div>─────────────────────</div>
+                <div>Enter PIN to confirm ▌</div>
+              </div>
+            </div>
+
+            <!-- Africell Money panel -->
+            <div class="pay-panel" id="panel-africell_money">
+              <div style="background:#f5f3ff; border:1.5px solid #ddd6fe;
+                          border-radius:var(--radius); padding:18px; margin-bottom:16px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                  <span style="font-size:1.8rem;">🟣</span>
+                  <div>
+                    <strong style="color:#5b21b6;">Africell Money</strong><br>
+                    <small style="color:#6d28d9;">Instant mobile payment for Africell subscribers</small>
+                  </div>
+                </div>
+                <p style="font-size:.88rem;color:#4c1d95;margin:0;">
+                  After clicking <strong>Donate Now</strong> you'll be taken to Monime's secure page, where a
+                  payment request is sent to <span id="amPhonePreview" style="font-weight:700;">your Africell Money number</span>.
+                  Approve it with your Africell Money PIN on your phone.
+                </p>
+              </div>
+
+              <!-- Africell Money: the number to charge -->
+              <div class="form-group">
+                <label for="am-phone">Africell Money Number *
+                  <small style="font-weight:400;color:var(--cbn-gray-500);letter-spacing:0;text-transform:none;">
+                    (Africell SL numbers start with 030–033, 077, 080, 088 or 099)</small>
+                </label>
+                <div style="display:flex;gap:8px;">
+                  <span style="display:flex;align-items:center;padding:0 14px;border:1.5px solid var(--cbn-gray-200);
+                               border-radius:var(--radius);background:var(--cbn-gray-50);font-weight:700;color:var(--cbn-navy);
+                               white-space:nowrap;">🇸🇱 +232</span>
+                  <input type="tel" id="am-phone" inputmode="numeric" autocomplete="tel-national"
+                         placeholder="88 123 456" maxlength="12" style="flex:1;">
+                </div>
+                <small id="am-phone-msg" style="display:block;margin-top:6px;min-height:1.1em;color:var(--cbn-gray-500);">
+                  Enter the number registered to your Africell Money wallet.</small>
+              </div>
+
+              <ul class="steps-list">
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">1</span>
+                  <div class="step-text">
+                    <strong>Click "Donate via Africell Money"</strong>
+                    <span>We open Monime's secure checkout with your amount and reference</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">2</span>
+                  <div class="step-text">
+                    <strong>Confirm your number</strong>
+                    <span>Africell Money is pre-selected — confirm the number to charge</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">3</span>
+                  <div class="step-text">
+                    <strong>Enter your PIN on your phone</strong>
+                    <span>A USSD prompt appears — approve with your Africell Money PIN</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">4</span>
+                  <div class="step-text">
+                    <strong>Done! Receipt by email</strong>
+                    <span>You're returned to this page and receive an email receipt from CBN</span>
+                  </div>
+                </li>
+              </ul>
+              <div class="ussd-display" style="background:#1e1b4b;color:#c4b5fd;">
+                <div>Africell Money · CBN Donation</div>
+                <div>─────────────────────</div>
+                <div>Amount: <span class="ussd-highlight" id="amUssdAmt" style="color:#fbbf24;">Le 250,000</span></div>
+                <div>To: Community Builders Network</div>
+                <div>From: <span class="ussd-highlight" id="amUssdPhone" style="color:#fbbf24;">+232 ── ─── ───</span></div>
+                <div>Ref: <span class="ussd-highlight" id="amUssdRef" style="color:#fbbf24;">CBN-XXXXXX</span></div>
+                <div>─────────────────────</div>
+                <div>Enter PIN to confirm ▌</div>
+              </div>
+            </div>
+
+            <!-- Card panel — the card itself is entered on Monime's PCI-compliant page; here we
+                 collect the cardholder name and show a live preview of the card being used -->
+            <div class="pay-panel" id="panel-card">
+
+              <!-- Live card preview -->
+              <div class="card-preview" id="cardPreview" aria-hidden="true">
+                <div class="cp-shine"></div>
+                <div class="cp-top">
+                  <span class="cp-chip"></span>
+                  <span class="cp-contactless">)))</span>
+                  <span class="cp-brand" id="cpBrand">VISA / MASTERCARD</span>
+                </div>
+                <div class="cp-number">•••• &nbsp; •••• &nbsp; •••• &nbsp; ••••</div>
+                <div class="cp-bottom">
+                  <div>
+                    <div class="cp-label">Card holder</div>
+                    <div class="cp-name" id="cpName">YOUR NAME</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="cp-label">Amount</div>
+                    <div class="cp-amt" id="cpAmt">SLE 250.00</div>
+                  </div>
+                </div>
+                <div class="cp-ref">CBN · <span id="cpRef">CBN-XXXXXX</span></div>
+              </div>
+
+              <div class="form-group">
+                <label for="card-holder">Name on Card *
+                  <small style="font-weight:400;color:var(--cbn-gray-500);letter-spacing:0;text-transform:none;">
+                    (exactly as printed on the card)</small>
+                </label>
+                <input type="text" id="card-holder" autocomplete="cc-name" maxlength="60"
+                       placeholder="e.g. AMINATA KAMARA" style="text-transform:uppercase;letter-spacing:1px;">
+                <small id="card-holder-msg" style="display:block;margin-top:6px;min-height:1.1em;color:var(--cbn-gray-500);">
+                  Card number, expiry and CVV are entered on the next (Monime) screen.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Card brand <small style="font-weight:400;color:var(--cbn-gray-500);letter-spacing:0;text-transform:none;">(optional — helps us show the right logo)</small></label>
+                <div class="brand-pick" role="radiogroup" aria-label="Card brand">
+                  <label class="brand-opt"><input type="radio" name="card_brand" value="visa"><span class="bo-logo visa">VISA</span></label>
+                  <label class="brand-opt"><input type="radio" name="card_brand" value="mastercard"><span class="bo-logo mc"><i></i><i></i></span><span>Mastercard</span></label>
+                  <label class="brand-opt"><input type="radio" name="card_brand" value="other" checked><span class="bo-logo other">💳</span><span>Other</span></label>
+                </div>
+              </div>
+
+              <div class="card-trust">
+                <div class="ct-item"><span>🔒</span><div><strong>PCI-DSS compliant</strong><small>Your card number never touches this website</small></div></div>
+                <div class="ct-item"><span>🛡️</span><div><strong>3-D Secure</strong><small>Your bank may ask you to approve the payment</small></div></div>
+                <div class="ct-item"><span>🇸🇱</span><div><strong>Charged in Leones</strong><small>International cards are converted by your bank</small></div></div>
+              </div>
+
+              <ul class="steps-list">
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#0a2a4a,#1e73be);">1</span>
+                  <div class="step-text">
+                    <strong>Click "Donate by Card"</strong>
+                    <span>We open Monime's secure card page with your amount and reference</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#0a2a4a,#1e73be);">2</span>
+                  <div class="step-text">
+                    <strong>Enter your card details on Monime</strong>
+                    <span>Card number, expiry date and CVV — encrypted end-to-end</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#0a2a4a,#1e73be);">3</span>
+                  <div class="step-text">
+                    <strong>Approve with your bank if asked</strong>
+                    <span>Some banks send a one-time code by SMS or app (3-D Secure)</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="step-num" style="background:linear-gradient(135deg,#0a2a4a,#1e73be);">4</span>
+                  <div class="step-text">
+                    <strong>Done! Receipt by email</strong>
+                    <span>You're returned here and your receipt is emailed instantly</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <!-- Anonymous checkbox -->
+            <div class="form-group" style="margin-bottom:18px;">
+              <label style="text-transform:none;font-weight:400;font-size:.9rem;
+                             color:var(--cbn-gray-700);letter-spacing:0;
+                             display:flex;align-items:center;gap:10px;">
+                <input type="checkbox" name="anonymous" id="anonCheck" style="width:auto;">
+                Make my donation anonymous (your name won't be shared publicly)
+              </label>
+            </div>
+
+            <!-- Gift aid (SL equivalent acknowledgement) -->
+            <div class="form-group" style="margin-bottom:22px;">
+              <label style="text-transform:none;font-weight:400;font-size:.9rem;
+                             color:var(--cbn-gray-700);letter-spacing:0;
+                             display:flex;align-items:flex-start;gap:10px;">
+                <input type="checkbox" name="consent" id="consentCheck"
+                       required style="width:auto;margin-top:3px;">
+                I confirm this donation is from my own funds and I agree to
+                CBN's <a href="/privacy.html">Privacy Policy</a> and
+                <a href="/terms.html">Terms of Use</a>.
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                    id="donateBtn"
+                    style="width:100%;padding:16px;font-size:1rem;letter-spacing:1px;">
+              🟠 Donate Now — Le <span id="btnAmt">250,000</span>
+            </button>
+            <div id="formError" role="alert" aria-live="polite"
+                 style="display:none;margin-top:12px;padding:12px 14px;border-radius:var(--radius);
+                        background:#fee2e2;color:#7f1d1d;border-left:4px solid #dc2626;font-size:.9rem;"></div>
+
+            <div class="security-badges">
+              <span class="badge"><span class="ico">🔒</span> 256-bit SSL</span>
+              <span class="badge"><span class="ico">✅</span> Secure Payment</span>
+              <span class="badge"><span class="ico">📋</span> Registered NGO</span>
+              <span class="badge"><span class="ico">🇸🇱</span> Powered by Monime</span>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- ── RIGHT: IMPACT SIDEBAR ── -->
+        <aside class="impact-sidebar">
+
+          <!-- Your impact -->
+          <div class="i-card">
+            <div class="i-head">What Your Donation Does</div>
+            <div class="i-body">
+              <div class="impact-row">
+                <span class="amt">Le 50k</span>
+                <span class="desc">Provides school stationery for one girl for a term</span>
+              </div>
+              <div class="impact-row">
+                <span class="amt">Le 100k</span>
+                <span class="desc">Pays for one week of a community health worker's stipend</span>
+              </div>
+              <div class="impact-row">
+                <span class="amt">Le 250k</span>
+                <span class="desc">Seeds a village kitchen garden with improved vegetable varieties</span>
+              </div>
+              <div class="impact-row">
+                <span class="amt">Le 500k</span>
+                <span class="desc">Pays one girl's full secondary school fees for a term</span>
+              </div>
+              <div class="impact-row">
+                <span class="amt">Le 1M</span>
+                <span class="desc">Trains one community health worker for 12 weeks</span>
+              </div>
+              <div class="impact-row">
+                <span class="amt">Le 5M</span>
+                <span class="desc">Equips a borehole pump with spare parts for one year</span>
+              </div>
+              <div class="impact-row">
+                <span class="amt">Le 20M</span>
+                <span class="desc">Drills and commissions one solar-powered village borehole</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trust -->
+          <div class="i-card">
+            <div class="i-head">Why Give to CBN?</div>
+            <div class="i-body">
+              <ul style="list-style:none;padding:0;">
+                <li style="padding:8px 0;border-bottom:1px solid var(--cbn-gray-100);
+                            display:flex;gap:10px;align-items:center;">
+                  <span style="color:var(--cbn-orange);font-size:1.2rem;">✓</span>
+                  <span style="font-size:.9rem;color:var(--cbn-gray-700);">
+                    Registered Sierra Leone NGO #SL-NGO-2841</span>
+                </li>
+                <li style="padding:8px 0;border-bottom:1px solid var(--cbn-gray-100);
+                            display:flex;gap:10px;align-items:center;">
+                  <span style="color:var(--cbn-orange);font-size:1.2rem;">✓</span>
+                  <span style="font-size:.9rem;color:var(--cbn-gray-700);">
+                    100% of funds reach communities (admin costs separately funded)</span>
+                </li>
+                <li style="padding:8px 0;border-bottom:1px solid var(--cbn-gray-100);
+                            display:flex;gap:10px;align-items:center;">
+                  <span style="color:var(--cbn-orange);font-size:1.2rem;">✓</span>
+                  <span style="font-size:.9rem;color:var(--cbn-gray-700);">
+                    Quarterly impact reports sent to all donors</span>
+                </li>
+                <li style="padding:8px 0;display:flex;gap:10px;align-items:center;">
+                  <span style="color:var(--cbn-orange);font-size:1.2rem;">✓</span>
+                  <span style="font-size:.9rem;color:var(--cbn-gray-700);">
+                    Annual financial statements publicly available</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Other ways to give -->
+          <div class="i-card">
+            <div class="i-head">Other Ways to Give</div>
+            <div class="i-body">
+              <p style="font-size:.88rem;color:var(--cbn-gray-700);margin-bottom:14px;">
+                Prefer a different way? We welcome all forms of support.
+              </p>
+              <a href="/get-involved.html#partner" class="btn btn-ghost"
+                 style="display:block;text-align:center;margin-bottom:10px;">
+                Corporate Partnership
+              </a>
+              <a href="/get-involved.html#volunteer" class="btn btn-ghost"
+                 style="display:block;text-align:center;">
+                Volunteer Your Skills
+              </a>
+            </div>
+          </div>
+
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TRANSACTION STATUS MODAL
+       ============================================================ -->
+  <div class="modal-overlay" id="txModal" role="dialog" aria-modal="true"
+       aria-labelledby="modalTitle">
+    <div class="modal-box">
+
+      <!-- Pending state -->
+      <div id="statePending">
+        <div class="spinner"></div>
+        <h3 id="modalTitle">Sending Payment Request…</h3>
+        <p>A USSD prompt has been sent to <strong id="modalPhone"></strong>.
+           Please check your phone and enter your Orange Money PIN to confirm.</p>
+        <div class="modal-ref" id="modalRef"></div>
+        <button class="btn btn-ghost" onclick="closeModal()" style="width:100%;">
+          Cancel
+        </button>
+      </div>
+
+      <!-- Success state -->
+      <div id="stateSuccess" style="display:none;">
+        <div class="modal-icon success">✅</div>
+        <h3>Thank You! Donation Received.</h3>
+        <p>Your payment of <strong id="successAmt"></strong> has been confirmed.
+           A receipt has been sent to <strong id="successEmail"></strong>.</p>
+        <div class="modal-ref" id="successRef"></div>
+        <a href="/projects.html" class="btn btn-primary" style="width:100%;display:block;
+           text-align:center;margin-bottom:10px;">See Your Impact</a>
+        <button class="btn btn-ghost" onclick="closeModal()" style="width:100%;">
+          Close
+        </button>
+      </div>
+
+      <!-- Failed state -->
+      <div id="stateFailed" style="display:none;">
+        <div class="modal-icon failed">❌</div>
+        <h3>Payment Not Confirmed</h3>
+        <p id="failMsg">The payment was not confirmed. Please check your Orange Money balance
+           and PIN, then try again.</p>
+        <button class="btn btn-primary" onclick="closeModal()"
+                style="width:100%;margin-bottom:10px;">Try Again</button>
+        <a href="/contact.html" class="btn btn-ghost"
+           style="display:block;text-align:center;">Contact Support</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Shared footer — edit partials/footer.html to change it on every page -->
+  <div data-include="footer"></div>
+
+  <script src="/script.js"></script>
+  <script>
+  /* ================================================================
+     DONATE PAGE — All interactive logic
+     ================================================================ */
+  (function () {
+    'use strict';
+
+    /* ── Helpers ── */
+    var LS = function(n) { return document.getElementById(n); };
+    var fmt = function(n) {
+      return 'Le ' + Number(n).toLocaleString('en-SL');
+    };
+    var fmtUSD = function(leones) {
+      return '≈ $' + (leones / 20000).toFixed(0) + ' USD';
+    };
+    var impactFor = function(leones) {
+      if (leones < 100000) return 'funds school stationery for one child';
+      if (leones < 250000) return 'pays for one week of a health worker\'s stipend';
+      if (leones < 500000) return 'seeds a village kitchen garden';
+      if (leones < 1000000) return 'pays full school fees for one girl for a term';
+      if (leones < 5000000) return 'trains one community health worker';
+      if (leones < 20000000) return 'equips a borehole with spare parts for a year';
+      return 'drills a complete solar borehole for a village';
+    };
+
+    /* ── Amount Buttons ── */
+    var amountBtns  = document.querySelectorAll('.amount-btn');
+    var amountInput = LS('amountInput');
+    var amountEquiv = LS('amountEquiv');
+    var btnAmt      = LS('btnAmt');
+    var ussdAmt     = LS('ussdAmt');
+
+    function setAmount(val) {
+      amountInput.value = val;
+      var n = parseInt(val, 10) || 0;
+      var equiv = fmtUSD(n) + ' · ' + impactFor(n);
+      amountEquiv.textContent = equiv;
+      if (ussdAmt) ussdAmt.textContent = fmt(n);
+      // The button label is owned by the selected payment method (see refreshDonateButton).
+      // PAYMENT_METHODS is defined further down, so only delegate once it exists;
+      // until then fall back to the inline amount span.
+      if (typeof PAYMENT_METHODS !== 'undefined' && PAYMENT_METHODS && LS('methodInput').value) {
+        refreshDonateButton();
+      } else if (btnAmt) {
+        btnAmt.textContent = Number(n).toLocaleString('en-SL');
+      }
+    }
+
+    amountBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        amountBtns.forEach(function (b) { b.classList.remove('selected'); });
+        btn.classList.add('selected');
+        if (btn.dataset.amount === 'custom') {
+          amountInput.focus();
+        } else {
+          setAmount(btn.dataset.amount);
+        }
+      });
+    });
+
+    amountInput.addEventListener('input', function () {
+      amountBtns.forEach(function (b) { b.classList.remove('selected'); });
+      var custom = amountBtns[amountBtns.length - 1];
+      if (custom) custom.classList.add('selected');
+      setAmount(amountInput.value);
+    });
+
+    setAmount(250000); // init
+
+    /* ── Frequency Tabs ── */
+    document.querySelectorAll('.pay-tab[data-freq]').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.pay-tab[data-freq]')
+                .forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        LS('freqInput').value = tab.dataset.freq;
+      });
+    });
+
+    /* ================================================================
+       PAYMENT METHODS — one self-contained function per method
+       ----------------------------------------------------------------
+       Each method owns:  • which panel/fields are shown
+                          • its own validation rules
+                          • what it sends to the server
+       Selecting a tab calls selectMethod(); submitting calls the
+       method's pay…() function via PAYMENT_METHODS[method].pay().
+       ================================================================ */
+
+    /* ── Sierra Leone mobile-number helpers ── */
+    // Normalise "+232 76 123 456", "076123456", "76123456" → "76123456" (8 digits, no leading 0)
+    function normaliseSLNumber(raw) {
+      var d = String(raw || '').replace(/\D/g, '');
+      if (d.indexOf('232') === 0) d = d.slice(3);
+      if (d.length === 9 && d.charAt(0) === '0') d = d.slice(1);
+      return d;
+    }
+    function toE164(local8) { return '+232' + local8; }
+    function prettySL(local8) {
+      return local8.length === 8 ? '+232 ' + local8.slice(0,2) + ' ' + local8.slice(2,5) + ' ' + local8.slice(5) : local8;
+    }
+    // Operator prefixes (first two digits of the 8-digit local number)
+    var ORANGE_PREFIXES   = ['72','73','74','75','76','77','78','79'];
+    var AFRICELL_PREFIXES = ['30','31','32','33','34','77','88','99'];
+    function isOrangeNumber(local8)   { return local8.length === 8 && ORANGE_PREFIXES.indexOf(local8.slice(0,2)) !== -1; }
+    function isAfricellNumber(local8) { return local8.length === 8 && AFRICELL_PREFIXES.indexOf(local8.slice(0,2)) !== -1; }
+
+    // Inline field feedback
+    function setFieldState(input, msgEl, ok, text) {
+      if (input) {
+        input.style.borderColor = ok === null ? '' : (ok ? '#16a34a' : '#dc2626');
+        input.setCustomValidity(ok === false ? text : '');
+      }
+      if (msgEl) {
+        msgEl.textContent = text || '';
+        msgEl.style.color = ok === null ? 'var(--cbn-gray-500)' : (ok ? '#166534' : '#b91c1c');
+      }
+    }
+
+    // Shared donor fields (name + email) — required by every method
+    function validateDonorDetails() {
+      var first = LS('d-first').value.trim();
+      var last  = LS('d-last').value.trim();
+      var email = LS('d-email').value.trim();
+      if (!first || !last) { LS(first ? 'd-last' : 'd-first').focus(); return 'Please enter your first and last name.'; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { LS('d-email').focus(); return 'Please enter a valid email address for your receipt.'; }
+      return null;
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       1) ORANGE MONEY
+       ──────────────────────────────────────────────────────────── */
+    function validateOrangeMoney(showErrors) {
+      var input = LS('om-phone'), msg = LS('om-phone-msg');
+      var local = normaliseSLNumber(input.value);
+      if (!local) {
+        setFieldState(input, msg, showErrors ? false : null,
+          showErrors ? 'Please enter your Orange Money number.' : 'Enter the number registered to your Orange Money wallet.');
+        return null;
+      }
+      if (local.length !== 8) {
+        setFieldState(input, msg, false, 'A Sierra Leone number has 8 digits after +232 (e.g. 76 123 456).');
+        return null;
+      }
+      if (!isOrangeNumber(local)) {
+        if (isAfricellNumber(local)) {
+          setFieldState(input, msg, false, prettySL(local) + ' is an Africell number — switch to the Africell Money tab, or enter an Orange number (072–079).');
+        } else {
+          setFieldState(input, msg, false, prettySL(local) + ' is not an Orange Sierra Leone number. Orange numbers start with 072–079.');
+        }
+        return null;
+      }
+      setFieldState(input, msg, true, '✓ Orange Money · ' + prettySL(local));
+      return toE164(local);
+    }
+    function payOrangeMoney(amount) {
+      var err = validateDonorDetails();
+      if (err) return { ok: false, message: err };
+      var msisdn = validateOrangeMoney(true);
+      if (!msisdn) { LS('om-phone').focus(); return { ok: false, message: 'Please enter a valid Orange Money number.' }; }
+      LS('phoneHidden').value = msisdn;
+      LS('cardHolderHidden').value = '';
+      return {
+        ok: true,
+        method: 'orange_money',
+        phone: msisdn,
+        pendingTitle: 'Preparing your Orange Money payment…',
+        pendingBody:  'We are opening Monime\'s secure checkout. A request for ' + fmt(amount) +
+                      ' will be sent to ' + prettySL(normaliseSLNumber(msisdn)) + ' — approve it with your Orange Money PIN.'
+      };
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       2) AFRICELL MONEY
+       ──────────────────────────────────────────────────────────── */
+    function validateAfricellMoney(showErrors) {
+      var input = LS('am-phone'), msg = LS('am-phone-msg');
+      var local = normaliseSLNumber(input.value);
+      if (!local) {
+        setFieldState(input, msg, showErrors ? false : null,
+          showErrors ? 'Please enter your Africell Money number.' : 'Enter the number registered to your Africell Money wallet.');
+        return null;
+      }
+      if (local.length !== 8) {
+        setFieldState(input, msg, false, 'A Sierra Leone number has 8 digits after +232 (e.g. 88 123 456).');
+        return null;
+      }
+      if (!isAfricellNumber(local)) {
+        if (isOrangeNumber(local)) {
+          setFieldState(input, msg, false, prettySL(local) + ' is an Orange number — switch to the Orange Money tab, or enter an Africell number (030–034, 077, 088, 099).');
+        } else {
+          setFieldState(input, msg, false, prettySL(local) + ' is not an Africell Sierra Leone number. Africell numbers start with 030–034, 077, 088 or 099.');
+        }
+        return null;
+      }
+      setFieldState(input, msg, true, '✓ Africell Money · ' + prettySL(local));
+      return toE164(local);
+    }
+    function payAfricellMoney(amount) {
+      var err = validateDonorDetails();
+      if (err) return { ok: false, message: err };
+      var msisdn = validateAfricellMoney(true);
+      if (!msisdn) { LS('am-phone').focus(); return { ok: false, message: 'Please enter a valid Africell Money number.' }; }
+      LS('phoneHidden').value = msisdn;
+      LS('cardHolderHidden').value = '';
+      return {
+        ok: true,
+        method: 'africell_money',
+        phone: msisdn,
+        pendingTitle: 'Preparing your Africell Money payment…',
+        pendingBody:  'We are opening Monime\'s secure checkout. A request for ' + fmt(amount) +
+                      ' will be sent to ' + prettySL(normaliseSLNumber(msisdn)) + ' — approve it with your Africell Money PIN.'
+      };
+    }
+
+    /* ────────────────────────────────────────────────────────────
+       3) CARD  (holder name only — card data is entered on Monime)
+       ──────────────────────────────────────────────────────────── */
+    function validateCardHolder(showErrors) {
+      var input = LS('card-holder'), msg = LS('card-holder-msg');
+      var name = input.value.replace(/\s+/g, ' ').trim();
+      if (!name) {
+        setFieldState(input, msg, showErrors ? false : null,
+          showErrors ? 'Please enter the name printed on your card.' : 'Card number, expiry and CVV are entered on the next (Monime) screen.');
+        return null;
+      }
+      if (name.length < 3 || !/^[A-Za-z][A-Za-z .'\-]{1,58}$/.test(name)) {
+        setFieldState(input, msg, false, 'Use letters only, as printed on the card (e.g. AMINATA KAMARA).');
+        return null;
+      }
+      if (name.split(' ').length < 2) {
+        setFieldState(input, msg, false, 'Please enter the full name as printed on the card (first and last name).');
+        return null;
+      }
+      setFieldState(input, msg, true, '✓ ' + name.toUpperCase());
+      return name.toUpperCase();
+    }
+    function payCard(amount) {
+      var err = validateDonorDetails();
+      if (err) return { ok: false, message: err };
+      var holder = validateCardHolder(true);
+      if (!holder) { LS('card-holder').focus(); return { ok: false, message: 'Please enter the cardholder name.' }; }
+      LS('cardHolderHidden').value = holder;
+      LS('phoneHidden').value = '';
+      var brand = selectedCardBrand();
+      var brandLabel = brand === 'visa' ? 'Visa' : brand === 'mastercard' ? 'Mastercard' : 'card';
+      return {
+        ok: true,
+        method: 'card',
+        card_holder: holder,
+        card_brand: brand,
+        pendingTitle: 'Preparing secure ' + brandLabel + ' payment…',
+        pendingBody:  'We are opening Monime\'s PCI-compliant card page for ' + fmt(amount) + ' in the name of ' + holder +
+                      '. You will enter your card number, expiry and CVV there — never on this site.'
+      };
+    }
+
+    /* ── Registry: tab id → behaviour (all three check out through Monime) ── */
+    var PAYMENT_METHODS = {
+      orange_money:   { label: '🟠 Donate via Orange Money',   pay: payOrangeMoney,   liveCheck: validateOrangeMoney,   field: 'om-phone' },
+      africell_money: { label: '🟣 Donate via Africell Money', pay: payAfricellMoney, liveCheck: validateAfricellMoney, field: 'am-phone' },
+      card:           { label: '💳 Donate by Card',            pay: payCard,          liveCheck: validateCardHolder,    field: 'card-holder' }
+    };
+
+    /* ── Reference (declared here, before anything reads it) ── */
+    function genRef() {
+      return 'CBN-' + Date.now().toString(36).toUpperCase().slice(-6);
+    }
+    var currentRef = genRef();
+
+    /* ── Card preview: mirrors the name, brand, amount and reference ── */
+    function selectedCardBrand() {
+      var r = document.querySelector('input[name="card_brand"]:checked');
+      return r ? r.value : 'other';
+    }
+    function refreshCardPreview() {
+      var prev = LS('cardPreview'); if (!prev) return;
+      var name = LS('card-holder').value.replace(/\s+/g, ' ').trim().toUpperCase();
+      LS('cpName').textContent = name || 'YOUR NAME';
+      var brand = selectedCardBrand();
+      prev.classList.remove('visa', 'mastercard');
+      if (brand === 'visa') { prev.classList.add('visa'); LS('cpBrand').textContent = 'VISA'; }
+      else if (brand === 'mastercard') { prev.classList.add('mastercard'); LS('cpBrand').textContent = 'mastercard'; }
+      else { LS('cpBrand').textContent = 'VISA / MASTERCARD'; }
+      var n = parseInt(amountInput.value, 10) || 0;
+      LS('cpAmt').textContent = 'SLE ' + (n / 1000).toLocaleString('en-SL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      LS('cpRef').textContent = currentRef || 'CBN-XXXXXX';
+      prev.classList.toggle('valid', !!(name && /^[A-Z][A-Z .'\-]{1,58}$/.test(name) && name.split(' ').length >= 2));
+    }
+    document.querySelectorAll('input[name="card_brand"]').forEach(function (r) {
+      r.addEventListener('change', refreshCardPreview);
+    });
+    LS('card-holder').addEventListener('input', refreshCardPreview);
+
+    function currentMethod() { return LS('methodInput').value || 'orange_money'; }
+
+    function refreshDonateButton() {
+      var m = PAYMENT_METHODS[currentMethod()] || PAYMENT_METHODS.orange_money;
+      LS('donateBtn').textContent = m.label + ' — Le ' + Number(amountInput.value || 0).toLocaleString('en-SL');
+    }
+
+    // Clear validation state on every method-specific field except the active one,
+    // so an old error in a hidden panel can never block form submission.
+    function resetInactiveMethodFields(activeMethod) {
+      Object.keys(PAYMENT_METHODS).forEach(function (m) {
+        var f = PAYMENT_METHODS[m].field;
+        if (!f || m === activeMethod) return;
+        var el = LS(f);
+        if (el) { el.setCustomValidity(''); el.style.borderColor = ''; }
+        var msg = LS(f + '-msg');
+        if (msg) { msg.style.color = 'var(--cbn-gray-500)'; }
+      });
+    }
+
+    function selectMethod(method) {
+      if (!PAYMENT_METHODS[method]) method = 'orange_money';
+      LS('methodInput').value = method;
+      resetInactiveMethodFields(method);
+      clearFormError();
+      document.querySelectorAll('.pay-tab[data-method]').forEach(function (t) {
+        t.classList.toggle('active', t.dataset.method === method);
+        t.setAttribute('aria-selected', t.dataset.method === method);
+      });
+      document.querySelectorAll('.pay-panel').forEach(function (p) {
+        p.classList.toggle('active', p.id === 'panel-' + method);
+      });
+      refreshDonateButton();
+      // Focus the method's own field so the donor knows what to fill in
+      var f = PAYMENT_METHODS[method].field;
+      if (f && LS(f) && window.innerWidth > 700) setTimeout(function () { LS(f).focus(); }, 60);
+    }
+
+    // One delegated listener on the tab strip — robust even if tabs are re-rendered,
+    // and unaffected by any other listener on the page.
+    (function wireMethodTabs() {
+      var strip = document.querySelector('.pay-tab[data-method]');
+      strip = strip ? strip.parentElement : null;
+      if (!strip) return;
+      strip.addEventListener('click', function (e) {
+        var tab = e.target.closest('.pay-tab[data-method]');
+        if (!tab || !strip.contains(tab)) return;
+        e.preventDefault();
+        selectMethod(tab.dataset.method);
+      });
+      // Keyboard: ← → move between methods
+      strip.addEventListener('keydown', function (e) {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        var tabs = Array.prototype.slice.call(strip.querySelectorAll('.pay-tab[data-method]'));
+        var i = tabs.findIndex(function (t) { return t.classList.contains('active'); });
+        var next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+        if (next) { selectMethod(next.dataset.method); next.focus(); e.preventDefault(); }
+      });
+    })();
+
+    // Live validation while typing in each method's own field
+    Object.keys(PAYMENT_METHODS).forEach(function (m) {
+      var cfg = PAYMENT_METHODS[m];
+      if (!cfg.field || !cfg.liveCheck) return;
+      var el = LS(cfg.field);
+      if (!el) return;
+      el.addEventListener('input', function () { cfg.liveCheck(false); });
+      el.addEventListener('blur',  function () { if (el.value.trim()) cfg.liveCheck(true); });
+    });
+
+    // Keep the USSD previews in sync with the numbers typed
+    var modalPhone = LS('modalPhone');
+    LS('om-phone').addEventListener('input', function () {
+      var l = normaliseSLNumber(LS('om-phone').value);
+      if (LS('phonePreview')) LS('phonePreview').textContent = l ? prettySL(l) : 'your Orange Money number';
+    });
+    LS('am-phone').addEventListener('input', function () {
+      var l = normaliseSLNumber(LS('am-phone').value);
+      if (LS('amPhonePreview')) LS('amPhonePreview').textContent = l ? prettySL(l) : 'your Africell Money number';
+      if (LS('amUssdPhone'))    LS('amUssdPhone').textContent    = l ? prettySL(l) : '+232 ── ─── ───';
+    });
+    amountInput.addEventListener('input', function () {
+      refreshDonateButton();
+      if (LS('amUssdAmt')) LS('amUssdAmt').textContent = fmt(parseInt(amountInput.value, 10) || 0);
+      refreshCardPreview();
+    });
+    selectMethod('orange_money');
+    refreshCardPreview();
+
+    /* Self-check: every tab must map to a registered payment function. If this
+       ever prints an error, a tab would be dead — surface it instead of hiding it. */
+    document.querySelectorAll('.pay-tab[data-method]').forEach(function (t) {
+      var m = t.dataset.method;
+      if (!PAYMENT_METHODS[m] || typeof PAYMENT_METHODS[m].pay !== 'function') {
+        console.error('[donate] payment tab "' + m + '" has no pay() function registered');
+        t.disabled = true; t.title = 'Temporarily unavailable';
+      }
+    });
+    console.info('[donate] payment methods ready:', Object.keys(PAYMENT_METHODS).join(', '));
+
+    /* ── Show the reference in the previews ── */
+    if (LS('ussdRef'))   LS('ussdRef').textContent   = currentRef;
+    if (LS('amUssdRef')) LS('amUssdRef').textContent = currentRef;
+    if (LS('cpRef'))     LS('cpRef').textContent     = currentRef;
+
+    /* ── Form Submission → Monime checkout ── */
+    var modal        = LS('txModal');
+    var statePending = LS('statePending');
+    var stateSuccess = LS('stateSuccess');
+    var stateFailed  = LS('stateFailed');
+
+    window.closeModal = function () {
+      modal.classList.remove('open');
+      statePending.style.display = 'block';
+      stateSuccess.style.display = 'none';
+      stateFailed.style.display  = 'none';
+      currentRef = genRef();
+      if (LS('ussdRef')) LS('ussdRef').textContent = currentRef;
+    };
+
+    var form = LS('donateForm');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      /* Client-side validation (shared fields first; method fields are checked by the method itself) */
+      resetInactiveMethodFields(currentMethod());
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      var consent = LS('consentCheck');
+      if (!consent.checked) {
+        consent.setCustomValidity('Please confirm the statement above.');
+        form.reportValidity();
+        return;
+      }
+      consent.setCustomValidity('');
+
+      var amount = parseInt(amountInput.value, 10);
+      if (!amount || amount < 5000) {
+        amountInput.setCustomValidity('Minimum donation is Le 5,000.');
+        form.reportValidity();
+        return;
+      }
+      amountInput.setCustomValidity('');
+
+      var method = currentMethod();
+      var email  = LS('d-email').value.trim();
+
+      /* ── Dispatch to the selected payment method's own function ── */
+      var handler = PAYMENT_METHODS[method] || PAYMENT_METHODS.orange_money;
+      var result  = handler.pay(amount);
+      if (!result.ok) {
+        // The method already highlighted its field; show a compact message under the button
+        showFormError(result.message);
+        return;
+      }
+      clearFormError();
+
+      /* ── Monime checkout: our server creates the session, we redirect ── */
+      currentRef = genRef();
+      if (LS('ussdRef'))   LS('ussdRef').textContent   = currentRef;
+      if (LS('amUssdRef')) LS('amUssdRef').textContent = currentRef;
+      if (LS('cpRef'))     LS('cpRef').textContent     = currentRef;
+      if (LS('modalRef')) LS('modalRef').textContent = 'Transaction Ref: ' + currentRef;
+      if (modalPhone) modalPhone.textContent = result.phone ? prettySL(normaliseSLNumber(result.phone)) : (result.card_holder || '');
+      LS('successAmt').textContent = fmt(amount);
+      LS('successEmail').textContent = email;
+      LS('successRef').textContent = 'Ref: ' + currentRef;
+      setPendingCopy(result.pendingTitle || 'Creating your secure payment…',
+                     result.pendingBody  || 'Please wait — we are preparing your secure Monime checkout for ' + fmt(amount) + '.');
+      modal.classList.add('open');
+
+      var formData = new URLSearchParams({
+        amount:      amount,
+        phone:       result.phone || '',
+        card_holder: result.card_holder || '',
+        card_brand:  result.card_brand || '',
+        email:       email,
+        first_name:  LS('d-first').value,
+        last_name:   LS('d-last').value,
+        project:     LS('projectDesig').value,
+        frequency:   LS('freqInput').value,
+        ref:         currentRef,
+        method:      method,
+        anonymous:   LS('anonCheck') && LS('anonCheck').checked ? '1' : ''
+      });
+
+      fetch('/api/donate', {
+        method:  'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-Token': getCsrfToken(),
+          'Accept': 'application/json'
+        },
+        credentials: 'same-origin',
+        body: formData.toString()
+      })
+      .then(function (res) { return res.json().then(function (j) { j._http = res.status; return j; }); })
+      .then(function (data) {
+        if (!data.success) {
+          // Server-side validation failure → close the modal and point at the field
+          if (data.field && LS(data.field)) {
+            modal.classList.remove('open');
+            var msgEl = LS(data.field + '-msg');
+            setFieldState(LS(data.field), msgEl, false, data.message || 'Please check this field.');
+            showFormError(data.message || 'Please check the highlighted field.');
+            LS(data.field).focus();
+            return;
+          }
+          statePending.style.display = 'none';
+          LS('failMsg').textContent = data.message || 'We could not start the payment. Please try again.';
+          stateFailed.style.display = 'block';
+          return;
+        }
+        if (!data.checkout || !data.checkout.redirect_url) {
+          /* Gateway disabled → server told the donor to use bank transfer */
+          statePending.style.display = 'none';
+          LS('failMsg').textContent = data.message || 'Online payments are unavailable right now.';
+          stateFailed.style.display = 'block';
+          return;
+        }
+        /* Remember the reference so we can show the result when Monime sends us back */
+        try {
+          sessionStorage.setItem('cbn_donation', JSON.stringify({
+            ref: data.ref, amount: amount, email: email, mode: data.mode, t: Date.now()
+          }));
+        } catch (e) {}
+        setPendingCopy(
+          data.mode === 'simulation' ? 'Opening test checkout…' : 'Taking you to the secure payment page…',
+          (data.mode === 'test' ? 'TEST MODE — no real money will move. ' : '') +
+          'Confirm the payment on the next screen — with your mobile-money PIN, or your card details for card payments. ' +
+          'Your reference is ' + data.ref + '.');
+        /* Hand over to Monime's hosted checkout */
+        window.location.assign(data.checkout.redirect_url);
+      })
+      .catch(function () {
+        statePending.style.display = 'none';
+        LS('failMsg').textContent =
+          'Network error. Please check your connection and try again.';
+        stateFailed.style.display = 'block';
+      });
+    });
+
+    /* ── Modal copy helper ── */
+    function setPendingCopy(title, body) {
+      var h = statePending.querySelector('h3');
+      var p = statePending.querySelector('p');
+      if (h) h.textContent = title;
+      if (p) p.textContent = body;
+    }
+
+    /* ── Inline error under the Donate button ── */
+    function showFormError(msg) {
+      var el = LS('formError');
+      if (!el) return;
+      el.textContent = '⚠ ' + msg;
+      el.style.display = 'block';
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function clearFormError() {
+      var el = LS('formError');
+      if (el) { el.textContent = ''; el.style.display = 'none'; }
+    }
+
+    /* ================================================================
+       RETURN FROM MONIME  —  /donate/return sends the donor back here as
+       donate.html?status=success|pending|cancelled|unknown&ref=CBN-…
+       The server has ALREADY verified the session with Monime before
+       redirecting; for 'pending' (e.g. MoMo PIN still being entered) we
+       poll /api/donate/status until it settles.
+       ================================================================ */
+    (function handleReturn() {
+      var params = new URLSearchParams(window.location.search);
+      var st  = params.get('status');
+      var ref = params.get('ref') || '';
+      if (!st) return;
+
+      var saved = null;
+      try { saved = JSON.parse(sessionStorage.getItem('cbn_donation') || 'null'); } catch (e) {}
+      if (saved && saved.ref !== ref) saved = null;
+
+      /* Clean the URL so a refresh doesn't re-trigger */
+      try { history.replaceState({}, '', window.location.pathname); } catch (e) {}
+
+      function fillSuccess(d) {
+        LS('successAmt').textContent = d && d.amount_sll ? fmt(d.amount_sll) : (saved ? fmt(saved.amount) : '');
+        LS('successEmail').textContent = saved && saved.email ? saved.email : 'your email address';
+        LS('successRef').textContent = 'Ref: ' + ref + (d && d.amount_sle ? ' · ' + d.amount_sle : '');
+        var h = stateSuccess.querySelector('h3');
+        if (h && d && d.mode && d.mode !== 'live') h.textContent = 'Test payment confirmed — thank you!';
+        statePending.style.display = 'none';
+        stateFailed.style.display = 'none';
+        stateSuccess.style.display = 'block';
+        modal.classList.add('open');
+        try { sessionStorage.removeItem('cbn_donation'); } catch (e) {}
+      }
+      function fillFailed(msg) {
+        statePending.style.display = 'none';
+        stateSuccess.style.display = 'none';
+        LS('failMsg').textContent = msg;
+        stateFailed.style.display = 'block';
+        modal.classList.add('open');
+      }
+
+      if (st === 'success') {
+        /* Server already verified — fetch the details for the receipt card */
+        fetch('/api/donate/status?ref=' + encodeURIComponent(ref), {cache: 'no-store', credentials: 'same-origin'})
+          .then(function (r) { return r.json(); })
+          .then(function (d) { fillSuccess(d && d.success ? d : null); })
+          .catch(function () { fillSuccess(null); });
+        return;
+      }
+      if (st === 'cancelled') {
+        fillFailed('The payment was cancelled or not completed. No money was taken. ' +
+                   'You can try again whenever you are ready — your reference was ' + ref + '.');
+        return;
+      }
+      if (st === 'unknown') {
+        fillFailed('We could not find that donation reference. If money was taken, please contact us with your Monime receipt.');
+        return;
+      }
+      if (st === 'pending') {
+        setPendingCopy('Waiting for payment confirmation…',
+          'Monime is confirming your payment (reference ' + ref + '). This usually takes a few seconds — ' +
+          'if you were asked for a PIN on your phone, please complete that now.');
+        var mr = LS('modalRef'); if (mr) mr.textContent = 'Transaction Ref: ' + ref;
+        statePending.style.display = 'block';
+        modal.classList.add('open');
+        var tries = 0;
+        (function poll() {
+          tries += 1;
+          fetch('/api/donate/status?ref=' + encodeURIComponent(ref), {cache: 'no-store', credentials: 'same-origin'})
+            .then(function (r) { return r.json(); })
+            .then(function (d) {
+              if (d && d.status === 'completed') return fillSuccess(d);
+              if (d && d.status === 'failed')    return fillFailed('The payment was not completed (' + (d.gateway_status || 'cancelled') + '). No money was taken.');
+              if (tries < 40) setTimeout(poll, 3000);   /* ~2 minutes */
+              else fillFailed('We have not received confirmation yet. If your payment went through, you will still receive a receipt by email once Monime confirms it — reference ' + ref + '.');
+            })
+            .catch(function () { if (tries < 40) setTimeout(poll, 4000); });
+        })();
+      }
+    })();
+
+    /* Close modal on overlay click */
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeModal();
+    });
+
+  })();
+
+  /* Last-resort visibility: if the donate script above ever throws during set-up,
+     say so on the page instead of leaving silently dead buttons. */
+  window.addEventListener('error', function (ev) {
+    if (!ev || !ev.message) return;
+    var box = document.getElementById('formError');
+    if (box && !box.textContent) {
+      box.textContent = '⚠ A script error is stopping the donation form from working (' + ev.message +
+                        '). Please refresh the page; if it persists, contact us.';
+      box.style.display = 'block';
+    }
+    console.error('[donate] script error:', ev.message, ev.filename + ':' + ev.lineno);
+  });
+  </script>
+</body>
+</html>
