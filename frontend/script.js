@@ -20,6 +20,13 @@
 (function loadPartials() {
   'use strict';
 
+  const API_BASE = (window.CBN_API_BASE || '').replace(/\/+$/, '');
+  function resolveApiUrl(path) {
+    const target = path || '/';
+    if (!API_BASE) return target;
+    return new URL(target, API_BASE + '/').toString();
+  }
+
   const slots = document.querySelectorAll('[data-include]');
   if (!slots.length) { runSite(); return; }          // page has its own markup
 
@@ -669,7 +676,7 @@ function runSite() {
     );
     if (!cards.length || typeof fetch !== 'function') return;
 
-    fetch('/api/blog', { cache: 'no-store', credentials: 'same-origin' })
+    fetch(resolveApiUrl('/api/blog'), { cache: 'no-store', credentials: 'same-origin' })
       .then(function (r) { return r.ok ? r.json() : []; })
       .then(function (posts) {
         if (!posts || !posts.length) return;
@@ -723,7 +730,8 @@ function runSite() {
     if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
 
     try {
-      const response = await fetch(form.action, {
+      const targetUrl = resolveApiUrl(form.action);
+      const response = await fetch(targetUrl, {
         method: form.method || 'POST',
         headers: {
           'Accept': 'application/json',

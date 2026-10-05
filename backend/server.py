@@ -62,8 +62,11 @@ logger = setup_logging()
 # ------------------------------------------------------------------
 # CONFIG
 # ------------------------------------------------------------------
-HOST = os.environ.get("CBN_HOST", "127.0.0.1")
-PORT = int(os.environ.get("CBN_PORT", "8000"))
+# Render and other cloud hosts usually pass PORT in the environment and bind
+# to 0.0.0.0. Keep local behavior by falling back to localhost only when
+# those env vars are not set.
+HOST = os.environ.get("CBN_HOST") or os.environ.get("HOST") or "0.0.0.0"
+PORT = int(os.environ.get("CBN_PORT") or os.environ.get("PORT") or "8000")
 
 # ── Project layout ────────────────────────────────────────────────
 #   project/
