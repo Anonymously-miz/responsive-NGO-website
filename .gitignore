@@ -28,3 +28,5 @@ email.env.example
 *.yml
 Dockerfile
 restructure.py
+render.env.example
+render.yaml
